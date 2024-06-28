@@ -1,7 +1,7 @@
-local ui = {}
+local M = {}
 local statuscolumn = require("statuscol.statuscol")
 
-ui.default_config = {
+M.default_config = {
   disabled = {
     filetypes = { "help", "lazy", "TelescopePrompt" },
     buftypes = { "terminal", "nofile" },
@@ -29,7 +29,7 @@ ui.default_config = {
   },
 }
 
-ui.buf_check = function(buffer, config)
+M.buf_check = function(buffer, config)
   local cfg = {}
 
   if vim.tbl_contains(config.disabled.filetypes or {}, vim.bo[buffer].filetype) then
@@ -49,16 +49,16 @@ end
 
 -- Plugin setup
 --- @param user_config table
-ui.setup = function(user_config)
-  local merged_config = vim.tbl_deep_extend("keep", ui.default_config, user_config or {})
+M.setup = function(user_config)
+  local merged_config = vim.tbl_deep_extend("keep", M.default_config, user_config or {})
 
   vim.api.nvim_create_autocmd({ "BufWinEnter", "FileType" },{
     pattern = "*",
     callback = function(data)
       local buffer = data.buf
-      ui.buf_check(buffer, merged_config)
+      M.buf_check(buffer, merged_config)
     end
   })
 end
 
-return ui
+return M
